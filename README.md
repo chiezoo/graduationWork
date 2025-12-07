@@ -65,5 +65,3 @@ Rails7.2 /CSS(スマホ用れすぽんしぶる)
 MySQL
 - デプロイ先
 一旦は自分のローカル、MVPリリースの後で、GCP上に公開予定
-
-# graduateWork
