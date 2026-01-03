@@ -1,0 +1,58 @@
+<div style="background-color: #D9D9D9; min-height: 100vh; padding: 40px 20px; font-family: sans-serif;">
+  <div style="text-align: center; margin-bottom: 40px;">
+    <div style="font-size: 28px; margin-bottom: 10px; color: #333;">2025年</div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 40px;">
+      <span style="color: #3333CC; font-size: 60px; cursor: pointer;">◀</span>
+      <span style="font-size: 50px; color: #333;">12月</span>
+      <span style="color: #3333CC; font-size: 60px; cursor: pointer;">▶</span>
+    </div>
+  </div>
+
+  <div style="max-width: 700px; margin: 0 auto; background-color: white; border: 4px solid #3333CC;">
+    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+      <thead>
+        <tr style="background-color: #eee;">
+          <% %w[日 月 火 水 木 金 土].each do |day| %>
+            <th style="border: 1px solid #3333CC; padding: 10px; color: #333;"><%= day %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% start_date = Date.new(2025, 12, 1) %>
+        <% first_day = start_date.beginning_of_week(:sunday) %>
+        <% last_day = Date.new(2025, 12, 31).end_of_week(:sunday) %>
+
+        <% (first_day..last_day).to_a.in_groups_of(7) do |week| %>
+          <tr>
+            <% week.each do |date| %>
+              <td style="border: 2px solid #3333CC; height: 100px; vertical-align: top; position: relative; <%= 'background-color: #f2f2f2;' if date.month != 12 %>">
+                <%= link_to new_event_path(start_time: date), style: "text-decoration: none; color: black; display: block; padding: 5px; text-align: right; font-size: 18px;" do %>
+                  <%= date.day %>
+                <% end %>
+
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <% day_events = @events.select { |e| e.start_time.to_date == date } %>
+                  <% day_events.each do |event| %>
+                    <%= link_to event_path(event), style: "text-decoration: none; color: #3333CC; font-weight: bold; font-size: 16px; background: #e0e0ff; border-radius: 4px; padding: 4px; width: 90%; text-align: center; display: block;" do %>
+                      
+                      <% # Railsのタイムゾーン補正をバイパスしてDBの生の値を取得 %>
+                      <% raw_val = event.read_attribute_before_type_cast('start_time').to_s %>
+                      
+                      <% # 文字列から 時:分 を抜き出し、そのまま表示 %>
+                      <% if raw_val.match(/(\d{2}):(\d{2})/) %>
+                        <%= "#{$1}:#{$2}" %>
+                      <% else %>
+                        --:--
+                      <% end %>
+
+                    <% end %>
+                  <% end %>
+                </div>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
