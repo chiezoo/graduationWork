@@ -23,9 +23,9 @@ COPY . /app
 RUN RAILS_ENV=production SECRET_KEY_BASE=dummy_key_for_build bundle exec rails assets:precompile
 
 RUN chmod -R 777 /app/db
-RUN RAILS_ENV=production SECRET_KEY_BASE=dummy_key_for_build bundle exec rails db:prepare
+#RUN RAILS_ENV=production SECRET_KEY_BASE=dummy_key_for_build bundle exec rails db:prepare
 
-RUN RAILS_ENV=production SECRET_KEY_BASE=dummy_key_for_build bundle exec rails db:prepare
+#RUN RAILS_ENV=production SECRET_KEY_BASE=dummy_key_for_build bundle exec rails db:prepare
 
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
