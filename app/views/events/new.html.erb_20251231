@@ -1,0 +1,56 @@
+<div style="background-color: #D9D9D9; min-height: 100vh; padding: 60px 20px; font-family: sans-serif; box-sizing: border-box; display: flex; flex-direction: column; align-items: center;">
+
+  <% # 1. 日付と時刻の表示部分 %>
+  <div style="text-align: center; margin-bottom: 30px;">
+    <h2 style="font-size: 24px; color: #333; font-weight: bold;">
+     <% # 6行目付近を以下のように修正 %>
+     <%= @event.start_time.to_date.strftime('%m/%d') %>(<%= %w(日 月 火 水 木 金 土)[@event.start_time.to_date.wday] %>)
+    </h2>
+  </div>
+
+  <% # 2. 入力フォーム本体 %>
+  <div style="width: 100%; max-width: 500px;">
+    <%= form_with(model: @event, local: true) do |f| %>
+      
+      <% # 重要：コントローラーでセットした日時を隠しデータとして送信する %>
+      <%= f.hidden_field :start_time %>
+
+      <% # 薬1〜3のセレクトボックス %>
+      <% [1, 2, 3].each do |i| %>
+        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+          <label style="width: 60px; font-size: 18px;">薬<%= i %></label>
+          <div style="flex-grow: 1; position: relative;">
+            <%= f.select "medicine#{i}", [["薬A", "A"], ["薬B", "B"], ["薬C", "C"]], { include_blank: true }, 
+                { style: "width: 100%; padding: 10px; font-size: 18px; border: none; background: white; appearance: none; color: blue;" } %>
+            <span style="position: absolute; right: 10px; top: 12px; color: blue; pointer-events: none;">▼</span>
+          </div>
+        </div>
+      <% end %>
+
+      <% # 数量？の調整ボックス（画像中央の上下矢印部分） %>
+      <div style="display: flex; justify-content: center; margin: 20px 0;">
+        <div style="background: white; width: 60px; height: 40px; display: flex; align-items: center; justify-content: flex-end; padding-right: 5px; position: relative;">
+          <div style="display: flex; flex-direction: column; color: blue; font-size: 12px;">
+            <span>▲</span>
+            <span>▼</span>
+          </div>
+        </div>
+      </div>
+
+      <% # メモ欄 %>
+      <div style="display: flex; align-items: flex-start; margin-bottom: 40px;">
+        <label style="width: 60px; font-size: 18px; margin-top: 10px;">メモ</label>
+        <%= f.text_area :memo, style: "flex-grow: 1; height: 120px; border: none; background: white; padding: 10px;" %>
+      </div>
+
+      <% # ボタンエリア %>
+      <div style="display: flex; justify-content: space-between; gap: 40px;">
+        <%= link_to "キャンセル", events_path, 
+            style: "flex: 1; background: white; padding: 15px; text-align: center; text-decoration: none; color: black; font-size: 18px; border: 1px solid #999;" %>
+        <%= f.submit "保存", 
+            style: "flex: 1; background: white; padding: 15px; text-align: center; color: black; font-size: 18px; border: 1px solid #999; cursor: pointer;" %>
+      </div>
+
+    <% end %>
+  </div>
+</div>
