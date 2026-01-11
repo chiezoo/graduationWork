@@ -31,10 +31,14 @@
       <nav>
         <% if user_signed_in? %>
           <span style="margin-right: 15px; font-size: 0.9rem;">ログイン中: <%= current_user.email %></span>
-          <%= link_to "ログアウト", destroy_user_session_path, style: "color: #ff4d4d; text-decoration: none; font-size: 0.9rem;" %>
+          <% if current_user.admin? %>
+            <%= link_to "管理画面", admin_root_path, style: "margin-right: 15px; text-decoration: none; color: #007bff; font-weight: bold; font-size: 0.9rem;" %>
+          <% end %>
+
+          <%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete }, style: "color: #ff4d4d; text-decoration: none; font-size: 0.9rem;" %>
         <% else %>
-          <%= link_to "新規登録", new_user_registration_path, style: "margin-right: 15px; text-decoration: none;" %>
-          <%= link_to "ログイン", new_user_session_path, style: "text-decoration: none;" %>
+          <%= link_to "新規登録", new_user_registration_path, style: "text-decoration: none; color: white; background-color: white; background-color: #333; padding: 8px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" %>
+          <%= link_to "ログイン", new_user_session_path, style: "text-decoration: none; color: white; background-color: #333; padding: 8px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" %>
         <% end %>
       </nav>
     </header>

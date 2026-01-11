@@ -48,6 +48,9 @@ gem 'devise'
 
 gem "sqlite3", "~> 1.4"
 
+gem 'activeadmin'
+gem 'sassc-rails'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
