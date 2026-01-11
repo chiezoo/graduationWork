@@ -1,17 +1,28 @@
 <div id="<%= dom_id event %>">
-  <p>
-    <strong>Title:</strong>
-    <%= event.title %>
-  </p>
 
   <p>
     <strong>time:</strong>
     <%= event.time %>
   </p>
 
+  <% [1, 2, 3].each do |num| %>
+    <% medicine_value = event.public_send("medicine#{num}") %>
+      <% if medicine_value.present? %> <%# 中身がある時だけ表示する %>
+        <p>
+        <strong>medicine <%= num %>:</strong>
+        <%= medicine_value %>
+      </p>
+      <% end %>
+  <% end %>
+
   <p>
-    <strong>Content:</strong>
-    <%= event.content %>
+    <strong>pain_level:</strong>
+    <%= event.pain_level %>
+  </p>
+
+  <p>
+    <strong>memo:</strong>
+    <%= event.memo %>
   </p>
 
 </div>
