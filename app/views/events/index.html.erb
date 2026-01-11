@@ -41,16 +41,16 @@
                 <% is_today = (date == Date.current) %>
                 <div style="<%= 'background-color: #fff0f0;' if is_today %> width: 100%; height: 100%;">
                   
-                  <%= link_to new_event_path(start_time: date), style: "text-decoration: none; color: black; display: block; padding: 5px; text-align: right; font-size: 18px;" do %>
+                  <%= link_to new_event_path(time: date), style: "text-decoration: none; color: black; display: block; padding: 5px; text-align: right; font-size: 18px;" do %>
                     <%= date.day %>
                   <% end %>
 
                   <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                    <% day_events = @events.select { |e| e.start_time.to_date == date } %>
+                    <% day_events = @events.select { |e| e.time.to_date == date } %>
                     <% day_events.each do |event| %>
                       <%= link_to event_path(event), style: "text-decoration: none; color: #3333CC; font-weight: bold; font-size: 14px; background: #e0e0ff; border-radius: 4px; padding: 4px; width: 90%; text-align: center; display: block;" do %>
                         
-                        <% raw_val = event.read_attribute_before_type_cast('start_time').to_s %>
+                        <% raw_val = event.read_attribute_before_type_cast('time').to_s %>
                         <% if raw_val.match(/(\d{2}):(\d{2})/) %>
                           <%= "#{$1}:#{$2}" %>
                         <% else %>

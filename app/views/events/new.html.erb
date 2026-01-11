@@ -2,13 +2,13 @@
 
   <div style="text-align: center; margin-bottom: 30px;">
     <h2 style="font-size: 24px; color: #333; font-weight: bold;">
-     <%= @event.start_time.to_date.strftime('%m/%d') %>(<%= %w(日 月 火 水 木 金 土)[@event.start_time.to_date.wday] %>)
+    <%= @event.time&.to_date&.strftime('%m/%d') %>(<%= %w(日 月 火 水 木 金 土)[@event.time&.to_date&.wday] %>)
     </h2>
   </div>
 
   <div style="width: 100%; max-width: 500px;">
     <%= form_with(model: @event, local: true) do |f| %>
-      <%= f.hidden_field :start_time %>
+      <%= f.hidden_field :time %>
 
       <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 25px;">
         <label style="font-size: 18px;">服用時間：</label>

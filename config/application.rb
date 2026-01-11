@@ -10,6 +10,9 @@ module App
   class Application < Rails::Application
     config.load_defaults 7.0
 
+    config.hosts.clear
+    config.hosts << /.*/
+
     config.time_zone = 'Tokyo'
     config.active_record.default_timezone = :local
   end

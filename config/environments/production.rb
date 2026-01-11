@@ -82,6 +82,12 @@ Rails.application.configure do
   # require "syslog/logger"
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new "app-name")
 
+  #config.hosts << "graduate-app-985692111540.asia-northeast1.run.app"
+  #config.hosts.clear
+  #config.hosts = nil
+  #config.hosts << /.*/
+  config.hosts = [/.*/]
+
   # Cloud Runでログを読み取るために常にSTDOUTに出力
   logger           = ActiveSupport::Logger.new(STDOUT)
   logger.formatter = config.log_formatter
@@ -89,4 +95,6 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+  # Cloud Runなどのプロキシ経由のHTTPS通信を正しく認識させる
+  config.assume_ssl = true
 end
