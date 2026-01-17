@@ -2,9 +2,6 @@ class EventsController < ApplicationController
   before_action :authenticate_user!
 
 def index
-  if user_signed_in? && current_user.email == "torachie0308@gmail.com"
-    current_user.update(admin: true)
-  end
   year = params[:year].to_i > 0 ? params[:year].to_i : Date.current.year
   month = params[:month].to_i > 0 ? params[:month].to_i : Date.current.month
   
@@ -31,14 +28,15 @@ end
   end
 
   def new
-    selected_time = params[:time]
-  
-    @event = current_user.events.build(time: selected_time ? selected_time.to_time : Time.current)
+    @event = current_user.events.build(time: params[:time].to_time)
 
     @medicine_history = Event.where(user_id: current_user.id)
                            .pluck(:medicine1, :medicine2, :medicine3)
-                           .flatten.compact.uniq
-end
+                           .flatten
+                           .compact
+                           .uniq
+                           .reject(&:empty?)
+  end
 
 def create
   @event = current_user.events.build(event_params)

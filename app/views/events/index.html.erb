@@ -1,64 +1,116 @@
-<div style="background-color: #D9D9D9; min-height: 100vh; padding: 40px 20px; font-family: sans-serif;">
-  <% @view_date ||= Date.current.beginning_of_month %>
-  <% @year ||= @view_date.year %>
-  <% @month ||= @view_date.month %>
+<style>
+  .gcp-font-setting {
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif !important;
+  }
 
+  .gcp-calendar-table {
+    width: 100%;
+    border-collapse: collapse !important;
+    table-layout: fixed;
+    border: 4px solid #3333CC !important;
+    background-color: white;
+  }
+
+  .gcp-calendar-table th, 
+  .gcp-calendar-table td {
+    border: 2px solid #3333CC !important; 
+    vertical-align: top;
+  }
+
+  /* 2. 曜日のフォントを調整し、センタリングを追加 */
+  .gcp-calendar-table th {
+    background-color: #eee;
+    padding: 12px 0;
+    color: #333;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center; /* ここで曜日を中央寄せにします */
+  }
+
+  .gcp-calendar-table td {
+    height: 120px;
+    position: relative;
+  }
+
+  /* 3. 日付数字の設定 */
+  .day-number-container {
+    text-align: right;
+    padding: 5px 10px;
+    font-size: 22px; 
+    font-weight: bold;
+    letter-spacing: -1px;
+  }
+
+  .day-link {
+    text-decoration: none;
+    color: black;
+  }
+
+  /* 4. 予定ボタンの設定 */
+  .event-item {
+    text-decoration: none;
+    color: #3333CC;
+    font-weight: bold;
+    font-size: 15px;
+    background: #e0e0ff;
+    border-radius: 4px;
+    padding: 5px;
+    width: 88%;
+    margin: 0 auto 5px;
+    display: block;
+    text-align: center;
+  }
+</style>
+
+<% @date ||= Date.current %>
+
+<div class="gcp-font-setting" style="background-color: #D9D9D9; min-height: 100vh; padding: 40px 20px;">
+  
+  <%# 年月・ナビゲーション %>
   <div style="text-align: center; margin-bottom: 40px;">
-    <div style="font-size: 28px; margin-bottom: 10px; color: #333;"><%= @year %>年</div>
+    <div style="font-size: 32px; margin-bottom: 10px; color: #333; font-weight: bold;"><%= @date.year %>年</div>
     
     <div style="display: flex; align-items: center; justify-content: center; gap: 40px;">
-      <% prev_m = @view_date.prev_month %>
-      <%= link_to events_path(year: prev_m.year, month: prev_m.month), style: "text-decoration: none;" do %>
-        <span style="color: #3333CC; font-size: 60px; cursor: pointer;">◀</span>
+      <%= link_to events_path(month: (@date - 1.month).month, year: (@date - 1.month).year), style: "text-decoration: none;" do %>
+        <span style="color: #3333CC; font-size: 60px;">◀</span>
       <% end %>
-
-      <span style="font-size: 50px; color: #333;"><%= @month %>月</span>
-
-      <% next_m = @view_date.next_month %>
-      <%= link_to events_path(year: next_m.year, month: next_m.month), style: "text-decoration: none;" do %>
-        <span style="color: #3333CC; font-size: 60px; cursor: pointer;">▶</span>
+      
+      <span style="font-size: 60px; color: #333; font-weight: bold; line-height: 1;"><%= @date.month %>月</span>
+      
+      <%= link_to events_path(month: (@date + 1.month).month, year: (@date + 1.month).year), style: "text-decoration: none;" do %>
+        <span style="color: #3333CC; font-size: 60px;">▶</span>
       <% end %>
     </div>
   </div>
 
-  <div style="max-width: 700px; margin: 0 auto; background-color: white; border: 4px solid #3333CC;">
-    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+  <div style="max-width: 750px; margin: 0 auto;">
+    <table class="gcp-calendar-table">
       <thead>
-        <tr style="background-color: #eee;">
-          <% %w[日 月 火 水 木 金 土].each do |day| %>
-            <th style="border: 1px solid #3333CC; padding: 10px; color: #333;"><%= day %></th>
+        <tr>
+          <% %w[日 月 火 水 木 金 土].each_with_index do |day, i| %>
+            <th style="color: <%= i == 0 ? 'red' : (i == 6 ? 'blue' : '#333') %>;"><%= day %></th>
           <% end %>
         </tr>
       </thead>
       <tbody>
-        <% first_day = @view_date.beginning_of_month.beginning_of_week(:sunday) %>
-        <% last_day = @view_date.end_of_month.end_of_week(:sunday) %>
+        <% first_day = @date.beginning_of_month.beginning_of_week(:sunday) %>
+        <% last_day = @date.end_of_month.end_of_week(:sunday) %>
 
         <% (first_day..last_day).to_a.in_groups_of(7) do |week| %>
           <tr>
             <% week.each do |date| %>
-              <td style="border: 2px solid #3333CC; height: 100px; vertical-align: top; position: relative; <%= 'background-color: #f2f2f2;' if date.month != @month %>">
-                <% is_today = (date == Date.current) %>
-                <div style="<%= 'background-color: #fff0f0;' if is_today %> width: 100%; height: 100%;">
-                  
-                  <%= link_to new_event_path(time: date), style: "text-decoration: none; color: black; display: block; padding: 5px; text-align: right; font-size: 18px;" do %>
-                    <%= date.day %>
-                  <% end %>
+              <td style="<%= 'background-color: #f2f2f2;' if date.month != @date.month %>">
+                <div class="day-number-container">
+                  <%= link_to date.day, new_event_path(start_time: date), class: "day-link", style: "color: #{date.wday == 0 ? 'red' : (date.wday == 6 ? 'blue' : 'black')};" %>
+                </div>
 
-                  <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                    <% day_events = @events.select { |e| e.time.to_date == date } %>
-                    <% day_events.each do |event| %>
-                      <%= link_to event_path(event), style: "text-decoration: none; color: #3333CC; font-weight: bold; font-size: 14px; background: #e0e0ff; border-radius: 4px; padding: 4px; width: 90%; text-align: center; display: block;" do %>
-                        
-                        <% raw_val = event.read_attribute_before_type_cast('time').to_s %>
-                        <% if raw_val.match(/(\d{2}):(\d{2})/) %>
-                          <%= "#{$1}:#{$2}" %>
-                        <% else %>
-                          --:--
-                        <% end %>
-                      <% end %>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                  <% day_events = @events.select { |e| e.time&.to_date == date } if @events %>
+                  <% day_events&.each do |event| %>
+                    <%= link_to event_path(event), class: "event-item" do %>
+                      <%= event.time&.strftime('%H:%M') %>
                     <% end %>
-                  </div>
+                  <% end %>
                 </div>
               </td>
             <% end %>

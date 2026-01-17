@@ -1,56 +1,58 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <title>おくすり記録</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
+    <title>おくすり記録</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-  
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-  <script type="module">
-    document.addEventListener('DOMContentLoaded', function() {
-      const calendarEl = document.getElementById('calendar');
-      if (calendarEl) {
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          locale: 'ja',
-          height: 'auto'
-        });
-        calendar.render();
-      }
-    });
-  </script>
-</head>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  </head>
 
-  <body style="margin: 0; font-family: sans-serif; background-color: #f4f4f4;">
+  <body style="margin: 0; font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif; background-color: #f4f4f4;">
     <header style="padding: 15px 30px; background-color: white; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
-      <h1 style="margin: 0; font-size: 1.2rem;">おくすり記録</h1>
+      <h1 style="margin: 0; font-size: 1.2rem;">
+        <%= link_to "おくすり記録", root_path, style: "text-decoration: none; color: #333; font-weight: bold;" %>
+      </h1>
       
-      <nav>
+      <nav style="display: flex; align-items: center; gap: 15px;">
         <% if user_signed_in? %>
-          <span style="margin-right: 15px; font-size: 0.9rem;">ログイン中: <%= current_user.email %></span>
-          <% if current_user.admin? %>
-            <%= link_to "管理画面", admin_root_path, style: "margin-right: 15px; text-decoration: none; color: #007bff; font-weight: bold; font-size: 0.9rem;" %>
+          
+          <%# --- 管理者画面リンクの追加 --- %>
+          <% if current_user.respond_to?(:admin?) && current_user.admin? %>
+            <%= link_to "管理者画面", "/admin/users", style: "
+              color: #3333CC; 
+              text-decoration: none; 
+              font-size: 0.85rem; 
+              border: 2px solid #3333CC; 
+              padding: 7px 14px; 
+              border-radius: 6px; 
+              font-weight: bold;
+              white-space: nowrap;
+            " %>
           <% end %>
 
-          <%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete }, style: "color: #ff4d4d; text-decoration: none; font-size: 0.9rem;" %>
+          <span style="font-size: 0.9rem; color: #555;">ログイン中: <%= current_user.email %></span>
+          
+          <%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete }, style: "
+            color: #ff4d4d; 
+            text-decoration: none; 
+            font-size: 0.85rem; 
+            border: 1px solid #ff4d4d; 
+            padding: 7px 14px; 
+            border-radius: 6px; 
+            font-weight: bold;
+            white-space: nowrap;
+          " %>
+          
         <% else %>
-          <%= link_to "新規登録", new_user_registration_path, style: "text-decoration: none; color: white; background-color: white; background-color: #333; padding: 8px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" %>
-          <%= link_to "ログイン", new_user_session_path, style: "text-decoration: none; color: white; background-color: #333; padding: 8px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" %>
+          <%= link_to "新規登録", new_user_registration_path, style: "text-decoration: none; color: white; background-color: #333; padding: 8px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: bold;" %>
+          <%= link_to "ログイン", new_user_session_path, style: "text-decoration: none; color: white; background-color: #333; padding: 8px 18px; border-radius: 6px; font-size: 0.85rem; font-weight: bold;" %>
         <% end %>
       </nav>
     </header>
 
-    <% if notice %>
-      <p style="padding: 10px; background-color: #e6ffed; color: #22863a; margin: 0; text-align: center;"><%= notice %></p>
-    <% end %>
-    <% if alert %>
-      <p style="padding: 10px; background-color: #ffeef0; color: #cb2431; margin: 0; text-align: center;"><%= alert %></p>
-    <% end %>
-
-    <main style="padding: 40px 20px; max-width: 900px; margin: 0 auto; background-color: white; min-height: 80vh; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+    <main>
       <%= yield %>
     </main>
   </body>

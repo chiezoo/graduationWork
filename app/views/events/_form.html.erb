@@ -1,8 +1,7 @@
 <%= form_with(model: event) do |form| %>
   <% if event.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:</h2>
-
+    <div style="color: red; margin-bottom: 20px;">
+      <h2><%= event.errors.count %>件のエラーがあります:</h2>
       <ul>
         <% event.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,22 +10,51 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title, style: "display: block" %>
-    <%= form.text_field :title %>
+  <div style="margin-bottom: 15px;">
+    <%= form.label :title, "タイトル", style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
+    <%= form.text_field :title, style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" %>
   </div>
 
-  <div>
-    <%= form.label :time, style: "display: block" %>
-    <%= form.datetime_field :time, value: event.time&.to_time&.strftime('%Y-%m-%dT%H:%M') %>
+  <div style="margin-bottom: 15px;">
+    <%= form.label :time, "日時", style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
+    <%= form.datetime_field :time, value: event.time&.to_time&.strftime('%Y-%m-%dT%H:%M'), style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" %>
   </div>
 
-  <div>
-    <%= form.label :content, style: "display: block" %>
-    <%= form.text_area :content %>
+  <div style="margin-bottom: 20px;">
+    <%= form.label :content, "内容", style: "display: block; font-weight: bold; margin-bottom: 5px;" %>
+    <%= form.text_area :content, rows: 4, style: "width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;" %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <%# --- ボタンエリア --- %>
+  <div style="display: flex; justify-content: center; gap: 20px; margin-top: 30px;">
+    
+    <%# 保存ボタン：濃い青背景に白文字 %>
+    <%= form.submit "保存", style: "
+      background-color: #3333CC;
+      color: white;
+      border: none;
+      padding: 12px 40px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      min-width: 140px;
+    " %>
+
+    <%# キャンセルボタン：白背景に青枠線 %>
+    <%= link_to "キャンセル", events_path, style: "
+      background-color: white;
+      color: #3333CC;
+      border: 2px solid #3333CC;
+      padding: 10px 40px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      text-align: center;
+      min-width: 140px;
+      display: inline-block;
+      box-sizing: border-box;
+    " %>
   </div>
 <% end %>
