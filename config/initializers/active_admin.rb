@@ -7,8 +7,8 @@ ActiveAdmin.setup do |config|
 
   # == User Authentication
   # 管理者専用の authenticate_admin_user! ではなく、通常の authenticate_user! を使用します
-  # config.authentication_method = :authenticate_admin_user!
-  config.authentication_method = :authenticate_user!
+  config.authentication_method = :authenticate_admin_user!
+  # config.authentication_method = :authenticate_user!
 
   # == Current User
   # 現在のユーザー取得も current_admin_user ではなく current_user を参照するようにします
@@ -29,11 +29,11 @@ ActiveAdmin.setup do |config|
   # == Localize Date/Time Format
   config.localize_format = :long
 
-  # == Menu System
-  # メニューに「アプリ（カレンダー）に戻る」を明示的に追加する場合
   config.namespace :admin do |admin|
     admin.build_menu do |menu|
-      menu.add label: "アプリに戻る", url: "/", priority: 1
+      # 「events_path」または「root_path」へのリンクを追加
+      # priority: 0 にすると一番左側に表示されます
+      menu.add label: "カレンダーに戻る", url: "/", priority: 0
     end
   end
 
