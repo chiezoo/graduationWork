@@ -97,4 +97,13 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
   # Cloud Runなどのプロキシ経由のHTTPS通信を正しく認識させる
   config.assume_ssl = true
+
+  config.action_mailer.default_url_options = { 
+    host: 'graduate-app-985692111540.asia-northeast1.run.app', 
+    protocol: 'https' 
+  }
+
+  # メールの送信方法を「ログ出力のみ」にする（実際には届きません）
+  config.action_mailer.delivery_method = :test
+
 end
